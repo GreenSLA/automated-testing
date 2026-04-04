@@ -1,0 +1,42 @@
+name: Selenium Tests
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: src/RealWorldTests
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: src/RealWorldTests
+
+      - name: Run Selenium tests
+        run: dotnet test --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=results.trx"
+        working-directory: src/RealWorldTests
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always() # загружаем даже если тесты упали
+        with:
+          name: test-results
+          path: src/RealWorldTests/TestResults/results.trx
