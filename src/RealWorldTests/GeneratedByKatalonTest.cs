@@ -1,6 +1,7 @@
 using System.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 
 namespace RealWorldTests;
 
@@ -15,7 +16,14 @@ public class GeneratedByKatalonTest
     [SetUp]
     public void SetupTest()
     {
-        driver = new ChromeDriver();
+        var options = new ChromeOptions();
+        if (Environment.GetEnvironmentVariable("CI") == "true")
+        {
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-dev-shm-usage");
+        }
+        driver = new ChromeDriver(options);
         baseURL = "https://www.google.com/";
         verificationErrors = new StringBuilder();
     }
@@ -41,15 +49,24 @@ public class GeneratedByKatalonTest
     [Test]
     public void TheDemoAppLoginTest()
     {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+        driver.Navigate().GoToUrl("https://demo.realworld.show");
+        driver.Manage().Cookies.DeleteAllCookies();
+        ((IJavaScriptExecutor)driver).ExecuteScript("localStorage.clear(); sessionStorage.clear();");
+
         driver.Navigate().GoToUrl("https://demo.realworld.show/login");
-        driver.FindElement(By.LinkText("Sign in")).Click();
-        driver.FindElement(By.Name("email")).Click();
-        driver.FindElement(By.Name("email")).Clear();
-        driver.FindElement(By.Name("email")).SendKeys("oleg@mail.com");
-        driver.FindElement(By.Name("password")).Click();
-        driver.FindElement(By.Name("password")).Clear();
-        driver.FindElement(By.Name("password")).SendKeys("oleg");
-        driver.FindElement(By.XPath("//button[@type='submit']")).Click();
+        wait.Until(d => d.FindElement(By.LinkText("Sign in"))).Click();
+
+        var email = wait.Until(d => d.FindElement(By.Name("email")));
+        email.Clear();
+        email.SendKeys("oleg@mail.com");
+
+        var password = wait.Until(d => d.FindElement(By.Name("password")));
+        password.Clear();
+        password.SendKeys("oleg");
+
+        wait.Until(d => d.FindElement(By.XPath("//button[@type='submit']"))).Click();
     }
 
     private bool IsElementPresent(By by)
