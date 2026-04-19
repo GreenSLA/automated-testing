@@ -1,4 +1,4 @@
-using OpenQA.Selenium;
+using NUnit.Framework;
 
 namespace RealWorldTests;
 
@@ -10,8 +10,8 @@ public class GeneratedByKatalonTest : TestBase
     {
         AccountData user = AccountData.Generate();
 
-        OpenHomePage();
-        RegisterUser(user);
-        Login(user);
+        app.Navigation.OpenHomePage();
+        app.Auth.Register(user);
+        app.Auth.Login(user);
     }
 }

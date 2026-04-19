@@ -1,4 +1,4 @@
-using OpenQA.Selenium;
+using NUnit.Framework;
 
 namespace RealWorldTests;
 
@@ -16,35 +16,9 @@ public class ArticleCreationTests : TestBase
             Tags = "test"
         };
 
-        OpenHomePage();
-        RegisterUser(user);
-        Login(user);
-        CreateNewArticle(article);
-    }
-
-    public void CreateNewArticle(ArticleData article)
-    {
-        driver.Navigate().GoToUrl(baseURL + "/editor");
-
-        FillField(By.XPath("//input[@placeholder='Article Title']"), article.Title);
-
-        if (article.Description != null)
-        {
-            FillField(By.XPath("//input[@placeholder=\"What's this article about?\"]"), article.Description);
-        }
-
-        if (article.Body != null)
-        {
-            FillField(By.XPath("//textarea[@placeholder='Write your article (in markdown)']"), article.Body);
-        }
-
-        if (article.Tags != null)
-        {
-            FillField(By.XPath("//input[@placeholder='Enter tags']"), article.Tags);
-        }
-
-        wait.Until(d => d.FindElement(By.XPath("//button[contains(text(),'Publish Article')]"))).Click();
-
-        wait.Until(d => d.Url.Contains("/article/"));
+        app.Navigation.OpenHomePage();
+        app.Auth.Register(user);
+        app.Auth.Login(user);
+        app.Article.CreateNewArticle(article);
     }
 }
