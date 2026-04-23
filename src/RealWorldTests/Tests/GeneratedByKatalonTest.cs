@@ -13,5 +13,7 @@ public class GeneratedByKatalonTest : TestBase
         app.Navigation.OpenHomePage();
         app.Auth.Register(user);
         app.Auth.Login(user);
+
+        Assert.That(app.Driver.Url, Does.Not.Contain("/login"), "После логина должен быть редирект со страницы входа");
     }
 }

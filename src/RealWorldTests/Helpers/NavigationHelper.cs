@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace RealWorldTests;
 
@@ -18,13 +19,25 @@ public class NavigationHelper : HelperBase
 
     public void OpenHomePage()
     {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+
+        // Сначала явно логаутимся через UI - это единственный надёжный способ сбросить
+        manager.Auth.Logout();
+
         driver.Navigate().GoToUrl(baseURL);
         driver.Manage().Cookies.DeleteAllCookies();
         ((IJavaScriptExecutor)driver).ExecuteScript("localStorage.clear(); sessionStorage.clear();");
+        driver.Navigate().Refresh();
+        wait.Until(d => d.FindElements(By.TagName("app-root")).Count > 0);
     }
 
     public void GoToLoginPage()
     {
         driver.Navigate().GoToUrl(baseURL + "/login");
+    }
+
+    public void GoToSettingsPage()
+    {
+        driver.Navigate().GoToUrl(baseURL + "/settings");
     }
 }

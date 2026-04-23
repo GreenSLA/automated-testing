@@ -40,6 +40,19 @@ public class ArticleHelper : HelperBase
         wait.Until(d => d.Url.Contains("/article/"));
     }
 
+    public string GetArticleTitle()
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        return wait.Until(d => d.FindElement(By.TagName("h1"))).Text;
+    }
+
+    public void DeleteArticle()
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        wait.Until(d => d.FindElement(By.XPath("//button[contains(text(),'Delete Article')]"))).Click();
+        wait.Until(d => !d.Url.Contains("/article/"));
+    }
+
     private void FillField(WebDriverWait wait, By locator, string value)
     {
         var field = wait.Until(d => d.FindElement(locator));

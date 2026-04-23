@@ -20,5 +20,8 @@ public class ArticleCreationTests : TestBase
         app.Auth.Register(user);
         app.Auth.Login(user);
         app.Article.CreateNewArticle(article);
+
+        Assert.That(app.Driver.Url, Does.Contain("/article/"), "После создания статьи должен быть переход на страницу статьи");
+        Assert.That(app.Article.GetArticleTitle(), Is.EqualTo(article.Title), "Заголовок созданной статьи должен совпадать");
     }
 }

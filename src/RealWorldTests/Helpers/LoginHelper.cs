@@ -26,7 +26,6 @@ public class LoginHelper : HelperBase
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
 
         manager.Navigation.GoToLoginPage();
-        wait.Until(d => d.FindElement(By.LinkText("Sign in"))).Click();
 
         var emailField = wait.Until(d => d.FindElement(By.Name("email")));
         emailField.Clear();
@@ -39,5 +38,28 @@ public class LoginHelper : HelperBase
         wait.Until(d => d.FindElement(By.XPath("//button[@type='submit']"))).Click();
 
         wait.Until(d => !d.Url.Contains("/login"));
+    }
+
+    public bool IsLoggedIn()
+    {
+        // Наличие ссылки на Settings в навбаре означает что пользователь залогинен
+        return driver.FindElements(By.XPath("//a[@href='/settings']")).Count > 0;
+    }
+
+    public void Logout()
+    {
+        if (!IsLoggedIn()) return;
+
+        // Переходим на страницу настроек, где находится кнопка выхода
+        manager.Navigation.GoToSettingsPage();
+
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        // Кнопка "Or click here to logout."
+        wait.Until(d => d.FindElement(
+            By.XPath("//button[contains(., 'logout') or contains(., 'Logout')]")
+        )).Click();
+
+        // Ждём редиректа после выхода
+        wait.Until(d => !d.Url.Contains("/settings"));
     }
 }
