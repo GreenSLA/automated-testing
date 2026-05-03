@@ -1,27 +1,34 @@
-using NUnit.Framework;
+using System.Xml.Serialization;
+using RealWorldTests.Models;
 
-namespace RealWorldTests;
+namespace RealWorldTests.Tests;
 
 [TestFixture]
 public class ArticleCreationTests : TestBase
 {
-    [Test]
-    public void TheCreateArticleTest()
+    public static IEnumerable<ArticleData> ArticleDataFromXmlFile()
     {
-        AccountData user = AccountData.Generate();
-        ArticleData article = new ArticleData("Test Article Title")
-        {
-            Description = "Test article description",
-            Body = "This is the body of the test article.",
-            Tags = "test"
-        };
+        var xmlPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "articles.xml");
+        var serializer = new XmlSerializer(typeof(List<ArticleData>));
+        using var reader = new StreamReader(xmlPath);
+        var articles = (List<ArticleData>?)serializer.Deserialize(reader);
+        return articles ?? [];
+    }
+
+    [Test, TestCaseSource(nameof(ArticleDataFromXmlFile))]
+    public void TheCreateArticleTest(ArticleData article)
+    {
+        var user = AccountData.Generate();
 
         app.Navigation.OpenHomePage();
         app.Auth.Register(user);
         app.Auth.Login(user);
         app.Article.CreateNewArticle(article);
 
-        Assert.That(app.Driver.Url, Does.Contain("/article/"), "После создания статьи должен быть переход на страницу статьи");
-        Assert.That(app.Article.GetArticleTitle(), Is.EqualTo(article.Title), "Заголовок созданной статьи должен совпадать");
+        Assert.Multiple(() =>
+        {
+            Assert.That(app.Driver.Url, Does.Contain("/article/"), "После создания статьи должен быть переход на страницу статьи");
+            Assert.That(app.Article.GetArticleTitle(), Is.EqualTo(article.Title), "Заголовок созданной статьи должен совпадать");
+        });
     }
 }

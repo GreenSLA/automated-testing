@@ -4,11 +4,11 @@ namespace RealWorldTests;
 
 public class HelperBase
 {
-    protected AppManager manager;
+    protected AppManager.AppManager manager;
     protected IWebDriver driver;
     protected bool acceptNextAlert = true;
 
-    public HelperBase(AppManager manager)
+    public HelperBase(AppManager.AppManager manager)
     {
         this.manager = manager;
         this.driver = manager.Driver;

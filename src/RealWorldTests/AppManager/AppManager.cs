@@ -1,12 +1,13 @@
 using System.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using RealWorldTests.Helpers;
 
-namespace RealWorldTests;
+namespace RealWorldTests.AppManager;
 
 public class AppManager
 {
-    private static ThreadLocal<AppManager> app = new ThreadLocal<AppManager>();
+    private static ThreadLocal<AppManager> _app = new();
 
     private IWebDriver driver;
     private StringBuilder verificationErrors;
@@ -40,13 +41,13 @@ public class AppManager
 
     public static AppManager GetInstance()
     {
-        if (!app.IsValueCreated)
+        if (!_app.IsValueCreated)
         {
-            AppManager newInstance = new AppManager();
+            var newInstance = new AppManager();
             newInstance.Navigation.OpenHomePage();
-            app.Value = newInstance;
+            _app.Value = newInstance;
         }
-        return app.Value!;
+        return _app.Value!;
     }
 
     ~AppManager()
@@ -57,6 +58,7 @@ public class AppManager
         }
         catch (Exception)
         {
+            // ignored
         }
     }
 

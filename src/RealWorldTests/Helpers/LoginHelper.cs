@@ -8,7 +8,7 @@ public class LoginHelper : HelperBase
 {
     private string apiURL;
 
-    public LoginHelper(AppManager manager, string apiURL) : base(manager)
+    public LoginHelper(AppManager.AppManager manager, string apiURL) : base(manager)
     {
         this.apiURL = apiURL;
     }

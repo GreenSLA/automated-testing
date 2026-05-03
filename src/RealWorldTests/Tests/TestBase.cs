@@ -4,11 +4,11 @@ namespace RealWorldTests;
 
 public class TestBase
 {
-    protected AppManager app;
+    protected AppManager.AppManager app;
 
     [SetUp]
     public void SetupTest()
     {
-        app = AppManager.GetInstance();
+        app = AppManager.AppManager.GetInstance();
     }
 }

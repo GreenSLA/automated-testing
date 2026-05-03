@@ -1,13 +1,14 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using RealWorldTests.Models;
 
-namespace RealWorldTests;
+namespace RealWorldTests.Helpers;
 
 public class ArticleHelper : HelperBase
 {
     private string baseURL;
 
-    public ArticleHelper(AppManager manager, string baseURL) : base(manager)
+    public ArticleHelper(AppManager.AppManager manager, string baseURL) : base(manager)
     {
         this.baseURL = baseURL;
     }

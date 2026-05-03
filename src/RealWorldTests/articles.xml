@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfArticleData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ArticleData>
+    <Title>Complete Guide to Selenium #1777549358399</Title>
+    <Description>A complete introduction to Selenium for automated testing.</Description>
+    <Body>This article covers Selenium in depth. You will learn everything you need to get started with Selenium quickly and effectively.</Body>
+    <Tags>selenium</Tags>
+  </ArticleData>
+  <ArticleData>
+    <Title>Practical Guide to CI/CD #1777549358409</Title>
+    <Description>A practical introduction to CI/CD for automated testing.</Description>
+    <Body>This article covers CI/CD in depth. You will learn everything you need to get started with CI/CD quickly and effectively.</Body>
+    <Tags>testing</Tags>
+  </ArticleData>
+  <ArticleData>
+    <Title>Complete Guide to Selenium #1777549358410</Title>
+    <Description>A complete introduction to Selenium for automated testing.</Description>
+    <Body>This article covers Selenium in depth. You will learn everything you need to get started with Selenium quickly and effectively.</Body>
+    <Tags>ci</Tags>
+  </ArticleData>
+</ArrayOfArticleData>

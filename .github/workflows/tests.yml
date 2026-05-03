@@ -22,11 +22,23 @@ jobs:
         with:
           chrome-version: stable
 
-      - name: Restore dependencies
+      - name: Restore dependencies (generator)
+        run: dotnet restore
+        working-directory: src/ArticleDataGenerator
+
+      - name: Build generator
+        run: dotnet build --no-restore --configuration Release
+        working-directory: src/ArticleDataGenerator
+
+      - name: Generate test data
+        run: dotnet run --no-build --configuration Release -- g 3 ../RealWorldTests/articles.xml xml
+        working-directory: src/ArticleDataGenerator
+
+      - name: Restore dependencies (tests)
         run: dotnet restore
         working-directory: src/RealWorldTests
 
-      - name: Build
+      - name: Build tests
         run: dotnet build --no-restore --configuration Release
         working-directory: src/RealWorldTests
 
@@ -36,7 +48,7 @@ jobs:
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
-        if: always() # загружаем даже если тесты упали
+        if: always()
         with:
           name: test-results
           path: src/RealWorldTests/TestResults/results.trx

@@ -1,4 +1,4 @@
-namespace RealWorldTests.Models;
+namespace ArticleDataGenerator;
 
 public class ArticleData
 {
