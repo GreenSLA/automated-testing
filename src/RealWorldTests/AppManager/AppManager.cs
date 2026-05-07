@@ -30,8 +30,8 @@ public class AppManager
 
         driver = new ChromeDriver(options);
         driver.Manage().Window.Maximize();
-        baseURL = "https://demo.realworld.show";
-        apiURL = "https://api.realworld.show/api";
+        baseURL = Settings.Settings.BaseUrl;
+        apiURL = Settings.Settings.ApiUrl;
         verificationErrors = new StringBuilder();
 
         navigation = new NavigationHelper(this, baseURL);

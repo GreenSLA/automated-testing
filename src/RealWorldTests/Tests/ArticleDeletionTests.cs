@@ -1,15 +1,13 @@
-using NUnit.Framework;
 using RealWorldTests.Models;
 
-namespace RealWorldTests;
+namespace RealWorldTests.Tests;
 
 [TestFixture]
-public class ArticleDeletionTests : TestBase
+public class ArticleDeletionTests : AuthBase
 {
     [Test]
     public void TheDeleteArticleTest()
     {
-        AccountData user = AccountData.Generate();
         ArticleData article = new ArticleData("Article To Delete")
         {
             Description = "This article will be deleted",
@@ -17,9 +15,6 @@ public class ArticleDeletionTests : TestBase
             Tags = "delete"
         };
 
-        app.Navigation.OpenHomePage();
-        app.Auth.Register(user);
-        app.Auth.Login(user);
         app.Article.CreateNewArticle(article);
         app.Article.DeleteArticle();
 

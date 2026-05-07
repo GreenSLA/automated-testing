@@ -4,7 +4,7 @@ using RealWorldTests.Models;
 namespace RealWorldTests.Tests;
 
 [TestFixture]
-public class ArticleCreationTests : TestBase
+public class ArticleCreationTests : AuthBase
 {
     public static IEnumerable<ArticleData> ArticleDataFromXmlFile()
     {
@@ -18,11 +18,6 @@ public class ArticleCreationTests : TestBase
     [Test, TestCaseSource(nameof(ArticleDataFromXmlFile))]
     public void TheCreateArticleTest(ArticleData article)
     {
-        var user = AccountData.Generate();
-
-        app.Navigation.OpenHomePage();
-        app.Auth.Register(user);
-        app.Auth.Login(user);
         app.Article.CreateNewArticle(article);
 
         Assert.Multiple(() =>

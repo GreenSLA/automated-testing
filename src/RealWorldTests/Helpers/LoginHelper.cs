@@ -2,7 +2,7 @@ using System.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace RealWorldTests;
+namespace RealWorldTests.Helpers;
 
 public class LoginHelper : HelperBase
 {
@@ -23,9 +23,23 @@ public class LoginHelper : HelperBase
 
     public void Login(AccountData user)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        if (!TryLogin(user))
+            throw new WebDriverTimeoutException($"Не удалось войти под пользователем {user.Email}");
+    }
+
+    public bool TryLogin(AccountData user)
+    {
+        if (IsLoggedIn())
+        {
+            if (IsLoggedIn(user.Username))
+                return true;
+
+            Logout();
+        }
 
         manager.Navigation.GoToLoginPage();
+
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
 
         var emailField = wait.Until(d => d.FindElement(By.Name("email")));
         emailField.Clear();
@@ -37,29 +51,48 @@ public class LoginHelper : HelperBase
 
         wait.Until(d => d.FindElement(By.XPath("//button[@type='submit']"))).Click();
 
-        wait.Until(d => !d.Url.Contains("/login"));
+        try
+        {
+            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(d => !d.Url.Contains("/login"));
+            return true;
+        }
+        catch (WebDriverTimeoutException)
+        {
+            return false;
+        }
     }
 
+    /// <summary>
+    /// Проверяет, залогинен ли кто-либо
+    /// </summary>
     public bool IsLoggedIn()
     {
-        // Наличие ссылки на Settings в навбаре означает что пользователь залогинен
         return driver.FindElements(By.XPath("//a[@href='/settings']")).Count > 0;
     }
 
+    /// <summary>
+    /// Проверяет, залогинен ли конкретный пользователь по username в навбаре
+    /// </summary>
+    /// <param name="username">Имя пользователя</param>
+    public bool IsLoggedIn(string username)
+    {
+        return driver.FindElements(By.XPath($"//nav//a[normalize-space()='{username}']")).Count > 0;
+    }
+
+    /// <summary>
+    /// Разлогиниться
+    /// </summary>
     public void Logout()
     {
         if (!IsLoggedIn()) return;
 
-        // Переходим на страницу настроек, где находится кнопка выхода
         manager.Navigation.GoToSettingsPage();
 
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        // Кнопка "Or click here to logout."
         wait.Until(d => d.FindElement(
             By.XPath("//button[contains(., 'logout') or contains(., 'Logout')]")
         )).Click();
 
-        // Ждём редиректа после выхода
         wait.Until(d => !d.Url.Contains("/settings"));
     }
 }

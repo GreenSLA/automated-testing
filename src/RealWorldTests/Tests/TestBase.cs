@@ -1,6 +1,4 @@
-using NUnit.Framework;
-
-namespace RealWorldTests;
+namespace RealWorldTests.Tests;
 
 public class TestBase
 {
@@ -10,5 +8,6 @@ public class TestBase
     public void SetupTest()
     {
         app = AppManager.AppManager.GetInstance();
+        app.Navigation.OpenHomePage();
     }
 }

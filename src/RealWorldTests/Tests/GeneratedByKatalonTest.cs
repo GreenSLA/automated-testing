@@ -1,6 +1,4 @@
-using NUnit.Framework;
-
-namespace RealWorldTests;
+namespace RealWorldTests.Tests;
 
 [TestFixture]
 public class GeneratedByKatalonTest : TestBase
@@ -8,12 +6,13 @@ public class GeneratedByKatalonTest : TestBase
     [Test]
     public void TheDemoAppLoginTest()
     {
-        AccountData user = AccountData.Generate();
-
-        app.Navigation.OpenHomePage();
+        var user = AccountData.Generate();
         app.Auth.Register(user);
         app.Auth.Login(user);
 
-        Assert.That(app.Driver.Url, Does.Not.Contain("/login"), "После логина должен быть редирект со страницы входа");
+        Assert.That(
+            app.Driver.Url,
+            Does.Not.Contain("/login"),
+            "После логина должен быть редирект со страницы входа");
     }
 }
